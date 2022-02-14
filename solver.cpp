@@ -6,11 +6,11 @@
 
 using namespace std;
 
-int flag;
 // 1 for Satisfied
 // 0 for Unsatisfied
 // -1 for Completed
 // 2 for Normal
+
 class Formula {
     public:
     vector<int> literals;     // vector to store the value assigned to each variable
@@ -53,7 +53,7 @@ void SAT_Solver::init(){
     string str;
 
     // Read from the text file
-    ifstream cnf_file("test.cnf");
+    ifstream cnf_file("test2.cnf");
     int idx=0;
     // Use a while loop together with the getline() function to read the file line by line
     while(getline(cnf_file, str)){
@@ -100,7 +100,7 @@ void SAT_Solver::init(){
                         
                         // increase frequency and sign of the literal
                         formula.literal_freq[-val-1]++;
-                        formula.literal_sign[-val-1]++;
+                        formula.literal_sign[-val-1]--;
 
                     }
                 }
@@ -117,41 +117,40 @@ void SAT_Solver::init(){
     cnf_file.close();
 }
 
+
+/* Applying the unit propagation on the clauses and applying the respective
+transformations on the other clauses*/
+
 int SAT_Solver::uni_prop(Formula &f) {
-  bool unit_clause_found =
-      false; // stores whether the current iteration found a unit clause
-  if (f.clauses.size() == 0) // if the formula contains no clauses
-  {
-    return 1; // it is vacuously satisfied
+  bool found=false; // bool to get if a unit clause is found or not
+  
+  if(f.clauses.size()==0){
+    return 1;
   }
-  do {
-    unit_clause_found = false;
-    // iterate over the clauses in f
-    for (int i = 0; i < f.clauses.size(); i++) {
-      if (f.clauses[i].size() ==
-          1) // if the size of a clause is 1, it is a unit clause
-      {
-        unit_clause_found = true;
-        f.literals[f.clauses[i][0] / 2] =
-            f.clauses[i][0] % 2; // 0 - if true, 1 - if false, set the literal
-        f.literal_freq[f.clauses[i][0] / 2] =
-            -1; // once assigned, reset the frequency to mark it closed
-        int result = transform(f, f.clauses[i][0]/2); // apply this change through f
-        // if this caused the formula to be either satisfied or unsatisfied,
-        // return the result flag
-        if (result == 1 || result == 0) {
-          return result;
-        }
-        break; // exit the loop to check for another unit clause from the start
-      } else if (f.clauses[i].size() == 0) // if a given clause is empty
-      {
-        return 0; // the formula is unsatisfiable in this branch
+  do{
+    found=false;
+
+    for(int i=0;i<f.clauses.size();i++){
+      if(f.clauses[i].size()==1){ // If clause contains one literal, it is a unit clause
+        found=true;
+        f.literals[f.clauses[i][0]/2]=f.clauses[i][0]%2;  // Assigning the truth value to the clause
+        f.literal_freq[f.clauses[i][0]/2]=-1;   // Marking as closed by resetting the frequency 
+
+        int res=transform(f, f.clauses[i][0]/2);  // Applying the transformations over all clauses
+
+        if( res==0 || res==1) return res; 
+        break;  // Check for another open clause
+      }
+      else if(f.clauses[i].size()==0){
+        return 0; // Given clause is empty so unsatisfiable
       }
     }
-  } while (unit_clause_found);
+  }while(found);
 
-  return 2; // if reached here, the unit resolution ended normally
+  return 2; // Ended normally
 }
+
+
 
 int SAT_Solver::transform(Formula &f, int literal_to_apply) {
   int value_to_apply = f.literals[literal_to_apply]; // the value to apply, 0 -
@@ -247,26 +246,26 @@ int SAT_Solver::Algorithm(Formula f) {
   return 2;
 }
 
-void SAT_Solver::result(Formula &f, int result) {
-  if (result == 1) // if the formula is satisfiable
-  {
-    cout << "SAT" << endl;
-    for (int i = 0; i < f.literals.size(); i++) {
-      if (i != 0) {
-        cout << " ";
+void SAT_Solver::result(Formula &f, int res) {
+  if(res==1){   // If SATisfiable
+    cout<<"SAT"<<endl;
+
+    for(int i=0;i<f.literals.size();i++){
+      if(i!=0){
+        cout<<" ";
       }
-      if (f.literals[i] != -1) {
-        cout << pow(-1, f.literals[i]) * (i + 1);
-      } else // for literals which can take either value, arbitrarily assign
-             // them to be true
-      {
-        cout << (i + 1);
+
+      if(f.literals[i]!=-1){
+        cout<<pow(-1, f.literals[i])*(i+1);
+      }
+      else{   // For literals unassigned and can take any value, assign true
+        cout<<(i+1)<<endl;
       }
     }
-    cout << " 0";
-  } else // if the formula is unsatisfiable
-  {
-    cout << "UNSAT";
+    cout<<" 0"<<endl;
+  }
+  else{         // If UnSATisfiable
+    cout<<"UnSAT"<<endl;
   }
 }
 
