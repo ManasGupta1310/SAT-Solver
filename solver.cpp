@@ -53,7 +53,7 @@ void SAT_Solver::init(){
     string str;
 
     // Read from the text file
-    ifstream cnf_file("test2.cnf");
+    ifstream cnf_file("test3.cnf");
     int idx=0;
     // Use a while loop together with the getline() function to read the file line by line
     while(getline(cnf_file, str)){
