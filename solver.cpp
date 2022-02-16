@@ -51,7 +51,9 @@ void SAT_Solver::init(){
   string str;
 
   // Read from the text file
-  ifstream cnf_file("test2.cnf");
+  string path;
+  cin>>path;
+  ifstream cnf_file(path);
 
   int idx=0;
 
