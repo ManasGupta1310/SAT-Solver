@@ -4,7 +4,6 @@
 #include <fstream>
 #include <algorithm>
 
-
 using namespace std;
 
 // Return
@@ -19,7 +18,7 @@ public:
   vector<vector<int>> literal; // for storing literals, its frequency and the polarity difference
 
   vector<vector<int>> clauses; // vector to store clauses
-  // If literal is positive store it in form of 2n else 2n+1 if literal is negative
+  // If literal is positive store it in form of 10n or n+"0" else 10n+1 + n+"1" if literal is negative
 
   Formula() {}
   Formula(const Formula &f)
@@ -32,7 +31,7 @@ public:
 void result(Formula &f, int res)
 {
   if (res == 1)
-  { // If SATisfiable
+  { // If the formula is SATisfiable
     cout << "SAT" << endl;
 
     for (int i = 0; i < f.literal[0].size(); i++)
@@ -50,14 +49,15 @@ void result(Formula &f, int res)
   }
   else
   {
-    // If UnSATisfiable
+    // If the formula comes out to be UnSATisfiable
     cout << "UnSAT" << endl;
   }
 }
 
 int transform(Formula &f, int target)
 {
-  int val_target = f.literal[0][target]; // 0 is True, 1 if False
+  int val_target = f.literal[0][target];
+  // 0 is True, 1 if False
 
   for (int i = 0; i < f.clauses.size(); i++)
   {
@@ -67,10 +67,11 @@ int transform(Formula &f, int target)
       // Iterate over the variables in clause
 
       if ((10 * target + val_target) == f.clauses[i][j])
-      { // If literal applies with samae polarity as it is being tagetted
+      {
+        // If literal applies with samae polarity as it is being tagetted
         // remove the clause from the list
         f.clauses.erase(f.clauses.begin() + i);
-        i--; // reset iterator
+        i--;
 
         if (f.clauses.size() == 0)
         {
@@ -85,11 +86,11 @@ int transform(Formula &f, int target)
         // the literal appears with opposite polarity
         f.clauses[i].erase(f.clauses[i].begin() + j);
         // remove the literal from the clause, as it is false in it
-        j--; // reset the iterator
+        j--;
 
         if (f.clauses[i].size() == 0)
         {
-          // If the clause is empty the clause is unsatisfiable right now
+          // If the clause is empty the clause is unsatisfiable for now
           return 0;
         }
         break; // move to the next clause
@@ -97,7 +98,7 @@ int transform(Formula &f, int target)
     }
   }
 
-  // if reached here, the function is exiting normally
+  // Function ends normally
   return 2;
 }
 
@@ -133,12 +134,12 @@ int uni_prop(Formula &f)
       }
       else if (f.clauses[i].size() == 0)
       {
-        return 0; // Given clause is empty so unsatisfiable
+        return 0; // Empty clause signifies that it is currently unsatisfiable
       }
     }
   } while (found);
 
-  return 2; // Ended normally
+  return 2; // Ends normally
 }
 
 int Algorithm(Formula f)
@@ -157,6 +158,8 @@ int Algorithm(Formula f)
   // assigned a value already assigned variables have this field reset to -1 in
   // order to ignore them
   int i = distance(f.literal[1].begin(), max_element(f.literal[1].begin(), f.literal[1].end()));
+
+  // Aplly loop twice
   // once for true and once for false
 
   for (int j = 0; j < 2; j++)
@@ -183,7 +186,7 @@ int Algorithm(Formula f)
       return -1;
     }
     else if (transform_result == 0)
-    { // If formula not satisfied in this branch, return normally
+    { // If formula not satisfied, return normally
       continue;
     }
 
@@ -194,7 +197,7 @@ int Algorithm(Formula f)
     }
   }
 
-  // Reaching here means that the function returned normally
+  // Ends normally
   return 2;
 }
 
@@ -216,6 +219,8 @@ int main()
   Formula formula;
   int literal_count;
   int clause_count;
+
+  //----------------------------INPUT-------------------------------------------------------
 
   string str;
 
@@ -306,9 +311,9 @@ int main()
   // Close the file
   cnf_file.close();
 
-  //------------------------------------------------------------------//
+  //-------------------------------pROCESSING FUNCTSION----------------------------------
 
-  cout<<"Proccessing the formulas......."<<endl;
+  cout << "Proccessing the formulas......." << endl;
   solve(formula);
   return 0;
 }
