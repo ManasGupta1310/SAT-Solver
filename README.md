@@ -18,7 +18,7 @@ A sample input file would be:
 > -1 -2 0 <br>
 
 ### Output
-> SAT
-> 1 -2 3 0
+> SAT <br>
+> 1 -2 3 0 <br>
 
-Positive literal defines it will be true. Negative literal defines it will be false.
+Positive literal defines it will be true. Negative literal defines it will be false. <br>
