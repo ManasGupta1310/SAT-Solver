@@ -3,7 +3,7 @@ A SAT-solver implemented in C++  using the DPLL algorithm.
 
 
 ### Input
-The input is taken in a CNF file (.cnf)
+The input is taken in a CNF file (.cnf). <br>
 A sample input file would be:
 
 > c sentences starting with c are comments and not compiled<br>
@@ -16,3 +16,9 @@ A sample input file would be:
 > -3 1 0 <br>
 > 1 2 3 0 <br>
 > -1 -2 0 <br>
+
+### Output
+> SAT
+> 1 -2 3 0
+
+Positive literal defines it will be true. Negative literal defines it will be false.
