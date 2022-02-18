@@ -243,8 +243,7 @@ int main()
 
   // Read from the cnf file
   string path;
-  // cin >> path;
-  path="testcases/uf20-01.cnf";
+  cin >> path;
   ifstream cnf_file(path);
 
   int idx = 0;
