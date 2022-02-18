@@ -3,6 +3,7 @@
 #include <math.h>
 #include <fstream>
 #include <algorithm>
+#include <limits.h>
 
 using namespace std;
 
@@ -157,7 +158,23 @@ int Algorithm(Formula f)
   // find the variable with maximum frequency in f, which will be the next to be
   // assigned a value already assigned variables have this field reset to -1 in
   // order to ignore them
-  int i = distance(f.literal[1].begin(), max_element(f.literal[1].begin(), f.literal[1].end()));
+
+  vector <int > ::iterator ptr;
+  int maxm=INT_MIN;
+  for(vector <int>::iterator i=f.literal[1].begin();i<f.literal[1].end();i++){
+      if(*i>=maxm){
+          maxm=*i;
+          ptr=i;
+      }
+  }
+
+  vector <int > ::iterator pt=f.literal[1].begin();
+  int i=0;
+  while(pt!=ptr){
+      i++;
+      pt++;
+  }
+
 
   // Aplly loop twice
   // once for true and once for false
@@ -226,7 +243,8 @@ int main()
 
   // Read from the cnf file
   string path;
-  cin >> path;
+  // cin >> path;
+  path="testcases/uf20-01.cnf";
   ifstream cnf_file(path);
 
   int idx = 0;
