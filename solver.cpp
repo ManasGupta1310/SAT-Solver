@@ -4,7 +4,9 @@
 #include <fstream>
 #include <algorithm>
 #include <limits.h>
+#include <chrono>
 
+using namespace std::chrono;
 using namespace std;
 
 // Return
@@ -238,7 +240,6 @@ int main()
   int clause_count;
 
   //----------------------------INPUT-------------------------------------------------------
-
   string str;
 
   // Read from the cnf file
@@ -248,6 +249,7 @@ int main()
 
   int idx = 0;
 
+  auto start = high_resolution_clock::now();
   // Use a while loop together with the getline() function to read the file line by line
   while (getline(cnf_file, str))
   {
@@ -332,5 +334,9 @@ int main()
 
   cout << "Proccessing the formulas......." << endl;
   solve(formula);
+  auto stop = high_resolution_clock::now();
+
+  auto duration = duration_cast<seconds>(stop - start);
+  cout << "Time taken : "<< duration.count() << " seconds"<<endl;
   return 0;
 }
